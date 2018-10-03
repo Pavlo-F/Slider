@@ -1,0 +1,2 @@
+# Slider
+learning JavaScript
