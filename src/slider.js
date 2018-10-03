@@ -12,6 +12,10 @@ var slider = (function()
     function hide() {
         _currentElem.element.style.display = "none";
     }
+
+    function hide2(obj) {
+        obj.element.style.display = "none";
+    }
     
     return {
         create: function (id, conf) {
@@ -42,7 +46,7 @@ var slider = (function()
                 _elements.push(item);
 
                 _currentElem = item;
-                show();
+                show(_currentElem);
             }
 
 
@@ -74,17 +78,20 @@ var slider = (function()
 
 
         next: function () {
-            hide();
+            hide(_currentElem);
             var nextIndex = _currentElem.nextIndex;
             _currentElem = _elements[nextIndex];
-            show();
+            show(_currentElem);
+
+            
         },
 
         prev: function () {
-            hide();
+            hide(_currentElem);
             var prevIndex = _currentElem.prevIndex;
             _currentElem = _elements[prevIndex];
-            show();
+            show(_currentElem);
+
         }
     };
 })();
