@@ -29,22 +29,24 @@
     </head>
     <body>
         <div id="slider" class="container">
-            <img src="img/1.jpg" class="sliderItem">
-            <img src="img/2.jpg" class="sliderItem">
-            <img src="img/3.jpg" class="sliderItem">
+            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/JseR/Hq6rYszNP/1.jpg" class="sliderItem">
+            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/CR4z/kLXP8XhhC/2.jpg" class="sliderItem">
+            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/6bnU/6exR3MPzT/3.jpg" class="sliderItem">
             <div class="sliderItem">Просто текст</div>
-            <img src="img/4.jpg" class="sliderItem">
-            <div class="sliderItem">Просто текст</div>
+            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/CpmS/ZaKS3Trtu/4.jpg" class="sliderItem">
+            <div class="sliderItem">Ещё текст</div>
         </div>
 
         <div>
             <button onclick="slider.prev()">Prev</button>
             <button onclick="slider.next()">Next</button>
+            <button onclick="slider.play()">Play</button>
+            <button onclick="slider.stop()">Stop</button>
         </div>
 
         <script src="../src/slider.js"></script>
         <script>
-            slider.create("slider", { "interval": "2000" });
+            slider.create("slider", { "interval": 2000 });
         </script>
 
     </body>

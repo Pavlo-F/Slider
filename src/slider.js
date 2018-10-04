@@ -4,19 +4,30 @@ var slider = (function()
     var _elements = [];
     var _config = {};
     var _currentElem = {};
+    var _playTimer = {};
 
-    function show() {
-        _currentElem.element.style.display = "block";
+    function show(obj) {
+        obj.element.style.display = "block";
     }
 
-    function hide() {
-        _currentElem.element.style.display = "none";
-    }
-
-    function hide2(obj) {
+    function hide(obj) {
         obj.element.style.display = "none";
     }
-    
+
+    function nextElement() {
+        hide(_currentElem);
+        var nextIndex = _currentElem.nextIndex;
+        _currentElem = _elements[nextIndex];
+        show(_currentElem);
+    }
+
+    function prevElement() {
+        hide(_currentElem);
+        var prevIndex = _currentElem.prevIndex;
+        _currentElem = _elements[prevIndex];
+        show(_currentElem);
+    }
+
     return {
         create: function (id, conf) {
 
@@ -78,20 +89,25 @@ var slider = (function()
 
 
         next: function () {
-            hide(_currentElem);
-            var nextIndex = _currentElem.nextIndex;
-            _currentElem = _elements[nextIndex];
-            show(_currentElem);
-
-            
+            nextElement();
         },
 
         prev: function () {
-            hide(_currentElem);
-            var prevIndex = _currentElem.prevIndex;
-            _currentElem = _elements[prevIndex];
-            show(_currentElem);
+            prevElement();
+        },
 
+        play: function () {
+            clearTimeout(_playTimer);
+
+            _playTimer = setTimeout(function run() {
+                nextElement();
+                _playTimer = setTimeout(run, _config.interval);
+            }, _config.interval);
+        },
+
+        stop: function () {
+            clearTimeout(_playTimer);
         }
+
     };
 })();
