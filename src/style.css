@@ -1,0 +1,21 @@
+.sliderItem {
+    display: none;
+    animation-duration: 1s;
+    animation-name: slidein;
+    position:relative;
+}
+
+@keyframes slidein {
+    from {
+        margin-left: 40%;
+    }
+
+    to {
+        margin-left: 0%;
+    }
+}
+
+.container {
+    border: 1px solid;
+    width: 50%;
+}
