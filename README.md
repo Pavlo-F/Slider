@@ -1,6 +1,19 @@
 # Slider
 Cyclic display of elements
 
+## How to use
+1. Сonnect library
+```javascript
+    <script src="../src/slider.js"></script>
+```
+
+2. Call the creat method to initialize the slider   
+```javascript
+    <script>
+        slider.create("slider", { "interval": 2000, "stylePath": "../src/style.css" });
+    </script>
+```
+
 ## License
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
