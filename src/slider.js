@@ -5,6 +5,8 @@ var slider = (function()
     var _config = {};
     var _currentElem = {};
     var _playTimer = {};
+    var _sliderElem = {};
+
 
     function show(obj) {
         obj.element.style.display = "block";
@@ -28,13 +30,82 @@ var slider = (function()
         show(_currentElem);
     }
 
+    function startSlideShow()
+    {
+        clearTimeout(_playTimer);
+
+        _playTimer = setInterval(function run() {
+            nextElement();
+        }, _config.interval);
+    }
+
+    function stopSlideShow() {
+        clearTimeout(_playTimer);
+    }
+
+    function addCSS(stylePath) {
+        var cssId = 'SliderStyle';
+        if (!document.getElementById(cssId)) {
+            var head = document.getElementsByTagName('head')[0];
+            var link = document.createElement('link');
+            link.id = cssId;
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = stylePath;
+            head.appendChild(link);
+        }
+    }
+
+    function setSliderClass(elem) {
+        elem.setAttribute("class", "sliderContainer");
+    }
+
+    function addItemAnimation(item) {
+        item.element.setAttribute("class", "sliderItem");
+    }
+
+
+    function createButtons()
+    {
+        var div = document.createElement('div');
+
+        var prevBtn = document.createElement('button');
+        prevBtn.onclick = prevElement;
+        prevBtn.textContent = "<";
+        div.appendChild(prevBtn);
+
+        var nextBtn = document.createElement('button');
+        nextBtn.onclick = nextElement;
+        nextBtn.textContent = ">";
+        div.appendChild(nextBtn);
+
+        var playBtn = document.createElement('button');
+        playBtn.onclick = startSlideShow;
+        playBtn.textContent = "play";
+        div.appendChild(playBtn);
+
+        var stopBtn = document.createElement('button');
+        stopBtn.onclick = stopSlideShow;
+        stopBtn.textContent = "stop";
+        div.appendChild(stopBtn);
+
+        _sliderElem.parentNode.insertBefore(div, div.nextSibling);
+    }
+
     return {
         create: function (id, conf) {
 
+            addCSS(conf.stylePath);
+
             _elements = []; // будет ли утечка после повторного создания?
             _config = conf;
-            var elem = document.getElementById(id);
-            var items = elem.getElementsByTagName('*');
+            _sliderElem = document.getElementById(id);
+            
+            setSliderClass(_sliderElem);
+
+            var items = _sliderElem.getElementsByTagName('*');
+
+            createButtons();
 
             var item = {
                 element: "",
@@ -54,8 +125,8 @@ var slider = (function()
                     prevIndex: last
                 };
 
+                addItemAnimation(item);
                 _elements.push(item);
-
                 _currentElem = item;
                 show(_currentElem);
             }
@@ -69,6 +140,8 @@ var slider = (function()
                     prevIndex: i - 1
                 };
 
+                addItemAnimation(tmpItem);
+                hide(tmpItem);
                 _elements.push(tmpItem);
             }
 
@@ -83,6 +156,8 @@ var slider = (function()
                     prevIndex: last - 1
                 };
 
+                addItemAnimation(item);
+                hide(item);
                 _elements.push(item);
             }
         },
@@ -97,16 +172,11 @@ var slider = (function()
         },
 
         play: function () {
-            clearTimeout(_playTimer);
-
-            _playTimer = setTimeout(function run() {
-                nextElement();
-                _playTimer = setTimeout(run, _config.interval);
-            }, _config.interval);
+            startSlideShow();
         },
 
         stop: function () {
-            clearTimeout(_playTimer);
+            stopSlideShow();
         }
 
     };

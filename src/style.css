@@ -1,8 +1,7 @@
 .sliderItem {
-    display: none;
     animation-duration: 1s;
     animation-name: slidein;
-    position:relative;
+    position: relative;
 }
 
 @keyframes slidein {
@@ -15,7 +14,7 @@
     }
 }
 
-.container {
+.sliderContainer {
     border: 1px solid;
     width: 50%;
 }
