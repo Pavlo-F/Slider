@@ -15,7 +15,13 @@
 
         <script src="../src/slider.js"></script>
         <script>
-            slider.create("slider", { "interval": 2000, "stylePath": "../src/style.css" });
+            var config = {
+                "interval": 2000,
+                "stylePath": "../src/style.css",
+                "width": "600px",
+                "height": "300px"
+            };
+            slider.create("slider", config);
         </script>
 
     </body>

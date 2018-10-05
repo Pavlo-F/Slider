@@ -64,6 +64,11 @@ var slider = (function()
         item.element.setAttribute("class", "sliderItem");
     }
 
+    function setMaxSize(item) {
+        item.element.style.maxWidth = "100%";
+        item.element.style.maxHeight = "100%";
+    }
+
 
     function createButtons()
     {
@@ -102,6 +107,8 @@ var slider = (function()
             _sliderElem = document.getElementById(id);
             
             setSliderClass(_sliderElem);
+            _sliderElem.style.width = conf.width;
+            _sliderElem.style.height = conf.height;
 
             var items = _sliderElem.getElementsByTagName('*');
 
@@ -125,6 +132,7 @@ var slider = (function()
                     prevIndex: last
                 };
 
+                setMaxSize(item);
                 addItemAnimation(item);
                 _elements.push(item);
                 _currentElem = item;
@@ -140,6 +148,7 @@ var slider = (function()
                     prevIndex: i - 1
                 };
 
+                setMaxSize(tmpItem);
                 addItemAnimation(tmpItem);
                 hide(tmpItem);
                 _elements.push(tmpItem);
@@ -156,6 +165,7 @@ var slider = (function()
                     prevIndex: last - 1
                 };
 
+                setMaxSize(item);
                 addItemAnimation(item);
                 hide(item);
                 _elements.push(item);
