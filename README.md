@@ -14,6 +14,22 @@ Cyclic display of elements
     </script>
 ```
 
+## Configuration
+
+**interval** : slideshow interval (milliseconds);
+
+**stylePath** : path to CSS style;
+
+**width** : slider width (CSS size);
+
+**height** : slider height (CSS size);
+
+**animateTime** : single slide animation time (milliseconds);
+
+**autoPlay** : start slideshow on create (true/false);
+
+**showButtons** : show navigation buttons (true/false).
+
 ## License
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
