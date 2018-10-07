@@ -7,10 +7,19 @@ Cyclic display of elements
     <script src="../src/slider.js"></script>
 ```
 
-2. Call the creat method to initialize the slider   
+2. Call the slider method to initialize   
 ```javascript
     <script>
-        slider.create("slider", { "interval": 2000, "stylePath": "../src/style.css" });
+        var config = {
+            "interval": 2000,
+            "stylePath": "../src/style.css",
+            "width": "400px",
+            "height": "300px",
+            "animateTime": 1000,
+            "autoPlay" : true,
+            "showButtons": true
+        };
+        slider("slider", config);
     </script>
 ```
 
