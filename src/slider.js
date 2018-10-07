@@ -1,193 +1,261 @@
 ;
-var slider = (function()
+(function()
 {
-    var _elements = [];
-    var _config = {};
-    var _currentElem = {};
-    var _playTimer = {};
-    var _sliderElem = {};
-
-
-    function show(obj) {
-        obj.element.style.display = "block";
-    }
-
-    function hide(obj) {
-        obj.element.style.display = "none";
-    }
-
-    function nextElement() {
-        hide(_currentElem);
-        var nextIndex = _currentElem.nextIndex;
-        _currentElem = _elements[nextIndex];
-        show(_currentElem);
-    }
-
-    function prevElement() {
-        hide(_currentElem);
-        var prevIndex = _currentElem.prevIndex;
-        _currentElem = _elements[prevIndex];
-        show(_currentElem);
-    }
-
-    function startSlideShow()
+    return slider = function(id, conf)
     {
-        clearTimeout(_playTimer);
+        var _elements = [];
+        var _config = {};
+        var _playTimer = {};
+        var _sliderElem = {};
+        var _currentIndex = 0;
+        var _playBtn = {};
+        var _isPlay = false;
+        var _nextHideTimeOut = {};
+        var _prevHideTimeOut = {};
 
-        _playTimer = setInterval(function run() {
-            nextElement();
-        }, _config.interval);
-    }
+        addCSS(conf.stylePath);
 
-    function stopSlideShow() {
-        clearTimeout(_playTimer);
-    }
+        _config = conf;
+        _sliderElem = document.getElementById(id);
+        _sliderElem.style.width = conf.width;
+        _sliderElem.style.height = conf.height;
 
-    function addCSS(stylePath) {
-        var cssId = 'SliderStyle';
-        if (!document.getElementById(cssId)) {
-            var head = document.getElementsByTagName('head')[0];
-            var link = document.createElement('link');
-            link.id = cssId;
-            link.rel = 'stylesheet';
-            link.type = 'text/css';
-            link.href = stylePath;
-            head.appendChild(link);
+        var allElem = _sliderElem.getElementsByTagName('*');
+
+        var _elements = [...allElem];
+        for(var i = 0; i < _elements.length; i++)
+        {
+            var elem = _elements[i];
+            elem.style.animationDuration = _config.animateTime + "ms";
+            setMaxSize(elem);
+            hide(elem);
         }
-    }
 
-    function setSliderClass(elem) {
-        elem.setAttribute("class", "sliderContainer");
-    }
+        setSliderClass(_sliderElem);
+        show(_elements[0]);
 
-    function addItemAnimation(item) {
-        item.element.setAttribute("class", "sliderItem");
-    }
-
-    function setMaxSize(item) {
-        item.element.style.maxWidth = "100%";
-        item.element.style.maxHeight = "100%";
-    }
-
-
-    function createButtons()
-    {
-        var div = document.createElement('div');
-
-        var prevBtn = document.createElement('button');
-        prevBtn.onclick = prevElement;
-        prevBtn.textContent = "<";
-        div.appendChild(prevBtn);
-
-        var nextBtn = document.createElement('button');
-        nextBtn.onclick = nextElement;
-        nextBtn.textContent = ">";
-        div.appendChild(nextBtn);
-
-        var playBtn = document.createElement('button');
-        playBtn.onclick = startSlideShow;
-        playBtn.textContent = "play";
-        div.appendChild(playBtn);
-
-        var stopBtn = document.createElement('button');
-        stopBtn.onclick = stopSlideShow;
-        stopBtn.textContent = "stop";
-        div.appendChild(stopBtn);
-
-        _sliderElem.parentNode.insertBefore(div, div.nextSibling);
-    }
-
-    return {
-        create: function (id, conf) {
-
-            addCSS(conf.stylePath);
-
-            _elements = []; // будет ли утечка после повторного создания?
-            _config = conf;
-            _sliderElem = document.getElementById(id);
-            
-            setSliderClass(_sliderElem);
-            _sliderElem.style.width = conf.width;
-            _sliderElem.style.height = conf.height;
-
-            var items = _sliderElem.getElementsByTagName('*');
-
+        
+        if(_config.showButtons === true) {
             createButtons();
-
-            var item = {
-                element: "",
-                nextIndex: 0,
-                prevIndex: 0
-            };
-
-
-            // first
-            if (items.length > 1) {
-
-                var last = items.length - 1;
-
-                item = {
-                    element: items[0],
-                    nextIndex: 1,
-                    prevIndex: last
-                };
-
-                setMaxSize(item);
-                addItemAnimation(item);
-                _elements.push(item);
-                _currentElem = item;
-                show(_currentElem);
-            }
-
-
-            for (var i = 1; i < items.length - 1; i++) {
-
-                var tmpItem = {
-                    element: items[i],
-                    nextIndex: i + 1,
-                    prevIndex: i - 1
-                };
-
-                setMaxSize(tmpItem);
-                addItemAnimation(tmpItem);
-                hide(tmpItem);
-                _elements.push(tmpItem);
-            }
-
-            // last
-            if (items.length > 1) {
-
-                last = items.length - 1;
-
-                item = {
-                    element: items[last],
-                    nextIndex: 0,
-                    prevIndex: last - 1
-                };
-
-                setMaxSize(item);
-                addItemAnimation(item);
-                hide(item);
-                _elements.push(item);
-            }
-        },
-
-
-        next: function () {
-            nextElement();
-        },
-
-        prev: function () {
-            prevElement();
-        },
-
-        play: function () {
-            startSlideShow();
-        },
-
-        stop: function () {
-            stopSlideShow();
         }
 
+        if(_config.autoPlay === true) {
+            startSlideShow();
+        }
+
+        function show(elem) {
+            elem.style.display = "block";
+        }
+
+        function hide(elem) {
+            elem.style.display = "none";
+        }
+
+        function nextElement() {
+            var current = _elements[_currentIndex];
+            addItemAnimationNext(current, 1);
+
+            clearTimeout(_prevHideTimeOut);
+
+            _nextHideTimeOut = setTimeout(function run() {
+                hide(current);
+            }, _config.animateTime);
+
+            _currentIndex++;
+
+            if(_currentIndex === _elements.length) {
+                _currentIndex = 0;
+            }
+
+            var next = _elements[_currentIndex];
+            addItemAnimationNext(next, -1);
+            show(next);
+        }
+
+        function prevElement() {
+            var current = _elements[_currentIndex];
+            addItemAnimationBack(current, 1);
+
+            clearTimeout(_nextHideTimeOut);
+
+            _prevHideTimeOut = setTimeout(function run() {
+                hide(current);
+            }, _config.animateTime);
+
+            _currentIndex--;
+
+            if(_currentIndex < 0) {
+                _currentIndex = _elements.length - 1;
+            }
+
+            var next = _elements[_currentIndex];
+            addItemAnimationBack(next, -1);
+            show(next);
+        }
+
+
+
+        function startSlideShow()
+        {
+            _isPlay = !_isPlay;
+
+            if(_isPlay)
+            {
+                stopSlideShow();
+
+                _playTimer = setInterval(function run() {
+                    nextElement();
+                }, _config.interval);
+
+                stopBtn(_playBtn);
+            }
+            else {
+                playBtn(_playBtn);
+                stopSlideShow();
+            }
+            
+        }
+
+        function stopSlideShow() {
+            clearTimeout(_playTimer);
+        }
+
+        function addCSS(stylePath) {
+            var cssId = 'SliderStyle';
+            if (!document.getElementById(cssId)) {
+                var link = document.createElement('link');
+                link.id = cssId;
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = stylePath;
+                document.head.appendChild(link);
+            }
+        }
+
+        function setSliderClass(elem) {
+            elem.setAttribute("class", "sliderContainer");
+        }
+
+        function addItemAnimationNext(item, order) {
+            if(order === 1) {
+                item.setAttribute("class", "sliderCurrentForward");
+            }
+            else {
+                item.setAttribute("class", "sliderCurrentToOut");
+            }
+        }
+
+        function addItemAnimationBack(item, order) {
+            if(order === 1) {
+                item.setAttribute("class", "sliderCurrentBackward");
+            }
+            else {
+                item.setAttribute("class", "sliderCurrentToOutBack");
+            }
+        }
+
+        function setMaxSize(elem) {
+            elem.style.width = "100%";
+            elem.style.height = "100%";
+        }
+
+
+        function createButtons()
+        {
+            var prevBtnCtn = document.createElement('div');
+            prevBtnCtn.style.display = "flex";
+            var prevBtn = document.createElement('div');
+            prevBtn.onclick = prevElement;
+            prevBtn.style.top = "50%";
+            prevBtn.setAttribute("class", "btnLeft");
+            prevBtnCtn.appendChild(prevBtn);
+            _sliderElem.appendChild(prevBtnCtn);
+
+
+            var nextBtnCtn = document.createElement('div');
+            nextBtnCtn.style.display = "flex";
+            nextBtnCtn.style.justifyContent = "flex-end";
+            var nextBtn = document.createElement('div');
+            nextBtn.onclick = nextElement;
+            nextBtn.style.position = "absolute";
+            nextBtn.style.top = "50%";
+            nextBtn.setAttribute("class", "btnRight");
+            nextBtnCtn.appendChild(nextBtn);
+            _sliderElem.appendChild(nextBtnCtn);
+
+
+            var playBtnCtn = document.createElement('div');
+            playBtnCtn.style.display = "flex";
+            playBtnCtn.style.justifyContent = "center";
+            _playBtn = document.createElement('div');
+            _playBtn.onclick = startSlideShow;
+            _playBtn.style.position = "absolute";
+            _playBtn.style.top = "50%";
+            _playBtn.setAttribute("class", "btnPlay");
+            playBtnCtn.appendChild(_playBtn);
+            _sliderElem.appendChild(playBtnCtn);
+        }
+
+        function playBtn(btn)
+        {
+            if(_config.showButtons === true){
+                btn.style.borderTop = "15px solid transparent";
+                btn.style.borderBottom = "15px solid transparent";
+                btn.style.borderLeft = "15px solid white";
+                btn.style.borderRight = "0";
+            }
+        }
+
+        function stopBtn(btn)
+        {
+            if(_config.showButtons === true){
+                btn.style.borderTop = "15px solid white";
+                btn.style.borderBottom = "15px solid white";
+                btn.style.borderLeft = "25px solid white";
+                btn.style.borderRight = "5px solid white";
+            }
+        }
+
+        _sliderElem.onmousedown = function(e) {
+            _sliderElem.onmouseup = function(d) {
+                _sliderElem.onmouseup = null;
+
+                var eps = d.pageX - e.pageX;
+                var isForward = eps > 0;
+
+                if(Math.abs(eps) > 50) {
+                    if(isForward) {
+                        nextElement();
+                    }
+                    else {
+                        prevElement();
+                    }
+                }
+            };
+        }
+
+        _sliderElem.ondragstart = function() {
+            return false;
+        };
+
+
+        return {
+            next: function () {
+                nextElement();
+            },
+
+            prev: function () {
+                prevElement();
+            },
+
+            play: function () {
+                startSlideShow();
+            },
+
+            stop: function () {
+                stopSlideShow();
+            }
+
+        };
     };
 })();

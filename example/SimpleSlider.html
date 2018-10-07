@@ -4,24 +4,27 @@
     <meta charset="utf-8">
 </head>
     <body>
-        <div id="slider">
-            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/JseR/Hq6rYszNP/1.jpg">
-            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/CR4z/kLXP8XhhC/2.jpg" >
-            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/6bnU/6exR3MPzT/3.jpg"> 
-            <div>Просто текст</div>
-            <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/CpmS/ZaKS3Trtu/4.jpg"> 
-            <div>Ещё текст</div>
-        </div>
+            <div id="slider">
+                <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/JseR/Hq6rYszNP/1.jpg">
+                <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/CR4z/kLXP8XhhC/2.jpg" >
+                <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/6bnU/6exR3MPzT/3.jpg"> 
+                <div>Просто текст</div>
+                <img src="https://thumb.cloud.mail.ru/weblink/thumb/xw1/CpmS/ZaKS3Trtu/4.jpg"> 
+                <div>Ещё текст</div>
+            </div>
 
         <script src="../src/slider.js"></script>
         <script>
             var config = {
                 "interval": 2000,
                 "stylePath": "../src/style.css",
-                "width": "600px",
-                "height": "300px"
+                "width": "400px",
+                "height": "300px",
+                "animateTime": 1000,
+                "autoPlay" : true,
+                "showButtons": true
             };
-            slider.create("slider", config);
+            slider("slider", config);
         </script>
 
     </body>
