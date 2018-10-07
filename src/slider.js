@@ -13,9 +13,10 @@
         var _nextHideTimeOut = {};
         var _prevHideTimeOut = {};
 
-        addCSS(conf.stylePath);
+        _config = validateConfig(conf);
 
-        _config = conf;
+        addCSS(_config.stylePath);
+
         _sliderElem = document.getElementById(id);
         _sliderElem.style.width = conf.width;
         _sliderElem.style.height = conf.height;
@@ -236,7 +237,53 @@
 
         _sliderElem.ondragstart = function() {
             return false;
-        };
+        }
+
+        function validateConfig(conf)
+        {
+            if(!conf) {
+                conf = {};
+            }
+
+            var result = conf;
+
+            if(!conf.interval)
+            {
+                result.interval = 2000;
+            }
+
+            if(!conf.stylePath)
+            {
+                result.stylePath = "../src/style.css";
+            }
+
+            if(!conf.width)
+            {
+                result.width = "400px";
+            }
+
+            if(!conf.height)
+            {
+                result.height = "300px";
+            }
+
+            if(!conf.animateTime)
+            {
+                result.animateTime = 1000;
+            }
+
+            if(typeof conf.autoPlay === "undefined")
+            {
+                result.autoPlay = true;
+            }
+
+            if(typeof conf.showButtons === "undefined")
+            {
+                result.showButtons = true;
+            }
+
+            return result;
+        }
 
 
         return {
