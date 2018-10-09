@@ -12,6 +12,8 @@
         var _isPlay = false;
         var _nextHideTimeOut = {};
         var _prevHideTimeOut = {};
+        var _prevClickTime = new Date();
+        var _slideOrder = 1;
 
         _config = validateConfig(conf);
 
@@ -52,7 +54,22 @@
             elem.style.display = "none";
         }
 
+        function blockClick(blockTime, prevClickTime) {
+            var diff = new Date().getTime() - prevClickTime;
+
+            return diff < blockTime;
+        }
+
         function nextElement() {
+
+            _slideOrder = 1;
+
+            if (blockClick(_config.animateTime, _prevClickTime)) {
+                return;
+            }
+
+            _prevClickTime = new Date();
+            
             var current = _elements[_currentIndex];
             addItemAnimationNext(current, 1);
 
@@ -74,6 +91,15 @@
         }
 
         function prevElement() {
+
+            _slideOrder = -1;
+
+            if (blockClick(_config.animateTime, _prevClickTime)) {
+                return;
+            }
+
+            _prevClickTime = new Date();
+
             var current = _elements[_currentIndex];
             addItemAnimationBack(current, 1);
 
@@ -105,7 +131,12 @@
                 stopSlideShow();
 
                 _playTimer = setInterval(function run() {
-                    nextElement();
+                    if (_slideOrder === 1) {
+                        nextElement();
+                    }
+                    else {
+                        prevElement();
+                    }
                 }, _config.interval);
 
                 stopBtn(_playBtn);
@@ -217,15 +248,15 @@
             }
         }
 
-        _sliderElem.onmousedown = function(e) {
-            _sliderElem.onmouseup = function(d) {
+        _sliderElem.onmousedown = function (e) {
+            _sliderElem.onmouseup = function (d) {
                 _sliderElem.onmouseup = null;
 
                 var eps = d.pageX - e.pageX;
-                var isForward = eps > 0;
+                var isForward = eps < 0;
 
-                if(Math.abs(eps) > 50) {
-                    if(isForward) {
+                if (Math.abs(eps) > 30) {
+                    if (isForward) {
                         nextElement();
                     }
                     else {
@@ -233,11 +264,11 @@
                     }
                 }
             };
-        }
+        };
 
-        _sliderElem.ondragstart = function() {
+        _sliderElem.ondragstart = function () {
             return false;
-        }
+        };
 
         function validateConfig(conf)
         {
@@ -247,40 +278,13 @@
 
             var result = conf;
 
-            if(!conf.interval)
-            {
-                result.interval = 2000;
-            }
-
-            if(!conf.stylePath)
-            {
-                result.stylePath = "../src/style.css";
-            }
-
-            if(!conf.width)
-            {
-                result.width = "400px";
-            }
-
-            if(!conf.height)
-            {
-                result.height = "300px";
-            }
-
-            if(!conf.animateTime)
-            {
-                result.animateTime = 1000;
-            }
-
-            if(typeof conf.autoPlay === "undefined")
-            {
-                result.autoPlay = true;
-            }
-
-            if(typeof conf.showButtons === "undefined")
-            {
-                result.showButtons = true;
-            }
+            result.interval = conf.interval || 2000;
+            result.stylePath = conf.stylePath || "../src/style.css";
+            result.width = conf.width || "400px";
+            result.height = conf.height || "300px";
+            result.animateTime = conf.animateTime || 1000;
+            result.autoPlay = conf.autoPlay || false;
+            result.showButtons = conf.showButtons || true;
 
             return result;
         }
