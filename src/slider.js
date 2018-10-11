@@ -290,6 +290,30 @@
         }
 
 
+        _sliderElem.addEventListener("touchstart", handleStart, false);
+        _sliderElem.addEventListener("touchend", handleEnd, false);
+
+        var clientX;
+
+        function handleStart(e) {
+            clientX = e.touches[0].clientX;
+        }
+
+        function handleEnd(e) {
+            var eps = e.changedTouches[0].clientX - clientX;
+            var isForward = eps < 0;
+
+            if (Math.abs(eps) > 30) {
+                if (isForward) {
+                    nextElement();
+                }
+                else {
+                    prevElement();
+                }
+            }
+        }
+
+
         return {
             next: function () {
                 nextElement();
