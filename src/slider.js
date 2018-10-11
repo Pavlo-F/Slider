@@ -14,8 +14,10 @@
         var _prevHideTimeOut = {};
         var _prevClickTime = new Date();
         var _slideOrder = 1;
+        var _clientX;
+        var _mouseIsDown = false;
 
-        _config = validateConfig(conf);
+        _config = checkConfig(conf);
 
         addCSS(_config.stylePath);
 
@@ -77,7 +79,7 @@
 
             _nextHideTimeOut = setTimeout(function run() {
                 hide(current);
-            }, _config.animateTime);
+            }, _config.animateTime - 100);
 
             _currentIndex++;
 
@@ -107,7 +109,7 @@
 
             _prevHideTimeOut = setTimeout(function run() {
                 hide(current);
-            }, _config.animateTime);
+            }, _config.animateTime - 100);
 
             _currentIndex--;
 
@@ -197,7 +199,7 @@
             var prevBtnCtn = document.createElement('div');
             prevBtnCtn.style.display = "flex";
             var prevBtn = document.createElement('div');
-            prevBtn.onclick = prevElement;
+            prevBtn.addEventListener("click", prevElement, false);
             prevBtn.style.top = "50%";
             prevBtn.setAttribute("class", "btnLeft");
             prevBtnCtn.appendChild(prevBtn);
@@ -208,7 +210,7 @@
             nextBtnCtn.style.display = "flex";
             nextBtnCtn.style.justifyContent = "flex-end";
             var nextBtn = document.createElement('div');
-            nextBtn.onclick = nextElement;
+            nextBtn.addEventListener("click", nextElement, false);
             nextBtn.style.position = "absolute";
             nextBtn.style.top = "50%";
             nextBtn.setAttribute("class", "btnRight");
@@ -220,7 +222,7 @@
             playBtnCtn.style.display = "flex";
             playBtnCtn.style.justifyContent = "center";
             _playBtn = document.createElement('div');
-            _playBtn.onclick = startSlideShow;
+            _playBtn.addEventListener("click", startSlideShow, false);
             _playBtn.style.position = "absolute";
             _playBtn.style.top = "50%";
             _playBtn.setAttribute("class", "btnPlay");
@@ -248,35 +250,55 @@
             }
         }
 
-        _sliderElem.onmousedown = function (e) {
-            _sliderElem.onmouseup = function (d) {
-                _sliderElem.onmouseup = null;
+        
 
-                var eps = d.pageX - e.pageX;
-                var isForward = eps < 0;
+        _sliderElem.addEventListener("mousedown", function (e) {
+            _clientX = e.pageX;
+            _mouseIsDown = true;
+        }, false);
 
-                if (Math.abs(eps) > 30) {
-                    if (isForward) {
-                        nextElement();
-                    }
-                    else {
-                        prevElement();
-                    }
+        _sliderElem.addEventListener("mouseup", function (e) {
+            mouseSlide(e);
+            _mouseIsDown = false;
+        }, false);
+
+
+        _sliderElem.addEventListener("mouseout", function (e) {
+            if (_mouseIsDown) {
+                mouseSlide(e);
+            }
+
+            _mouseIsDown = false;
+        }, false);
+
+
+        _sliderElem.addEventListener("dragstart", function (event) {
+            event.preventDefault();
+        });
+
+
+        function mouseSlide(e) {
+            var eps = e.pageX - _clientX;
+            var isForward = eps < 0;
+
+            if (Math.abs(eps) > 30) {
+                if (isForward) {
+                    nextElement();
                 }
-            };
-        };
+                else {
+                    prevElement();
+                }
+            }
+        }
 
-        _sliderElem.ondragstart = function () {
-            return false;
-        };
 
-        function validateConfig(conf)
+        function checkConfig(conf)
         {
             if(!conf) {
                 conf = {};
             }
 
-            var result = conf;
+            var result = { ...conf };
 
             result.interval = conf.interval || 2000;
             result.stylePath = conf.stylePath || "../src/style.css";
@@ -292,15 +314,17 @@
 
         _sliderElem.addEventListener("touchstart", handleStart, false);
         _sliderElem.addEventListener("touchend", handleEnd, false);
-
-        var clientX;
+  
 
         function handleStart(e) {
-            clientX = e.touches[0].clientX;
+            _clientX = e.touches[0].clientX;
+            _mouseIsDown = true;
         }
 
         function handleEnd(e) {
-            var eps = e.changedTouches[0].clientX - clientX;
+            _mouseIsDown = false;
+
+            var eps = e.changedTouches[0].clientX - _clientX;
             var isForward = eps < 0;
 
             if (Math.abs(eps) > 30) {
