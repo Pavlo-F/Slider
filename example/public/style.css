@@ -1,0 +1,190 @@
+.btnRight {
+    position: absolute;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid white;
+    opacity: .3;
+    padding-right: 20px;
+    transition: all .25s ease-in-out;
+    -moz-transition: all .25s ease-in-out;
+    -webkit-transition: all .25s ease-in-out;
+}
+  
+.btnRight:before {
+    content:"";
+    position:absolute;
+    background:rgba(200,200,200,.4);
+    height:50px;
+    width:50px;
+    -webkit-border-radius:100%;
+    border-radius:100%;
+    margin-left:-35px;
+    margin-top:-25px;
+    transition:all .25s ease-in-out;
+    -moz-transition:all .25s ease-in-out;
+    -webkit-transition:all .25s ease-in-out;
+  }
+  
+.btnRight:hover {
+    opacity:1;
+    cursor:pointer;
+  }
+  
+ .btnRight:hover:before{
+    -webkit-box-shadow:0px 0px 10px 1px rgba(0, 0, 0, .6);
+    box-shadow:0px 0px 10px 1px rgba(0, 0, 0, .4);
+  }
+
+.btnLeft {
+    position: absolute;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid white;
+    opacity: .3;
+    padding-left: 20px;
+    transition: all .25s ease-in-out;
+    -moz-transition: all .25s ease-in-out;
+    -webkit-transition: all .25s ease-in-out;
+}
+
+.btnLeft:before {
+    content:"";
+    position:absolute;
+    background:rgba(200,200,200,.4);
+    height:50px;
+    width:50px;
+    -webkit-border-radius:100%;
+    border-radius:100%;
+    margin-left:-15px;
+    margin-top:-25px;
+    transition:all .25s ease-in-out;
+    -moz-transition:all .25s ease-in-out;
+    -webkit-transition:all .25s ease-in-out;
+  }
+
+ .btnLeft:hover {
+    opacity:1;
+    cursor:pointer;
+  }
+
+ .btnLeft:hover:before{
+    -webkit-box-shadow:0px 0px 10px 1px rgba(0, 0, 0, .6);
+    box-shadow:0px 0px 10px 1px rgba(0, 0, 0, .4);
+  }
+
+
+
+  .btnPlay {
+    position:absolute;
+    border-top:15px solid transparent;
+    border-bottom:15px solid transparent;
+    border-left:15px solid white;
+    opacity:0;
+    margin-right:0px;
+     transition:all .25s ease-in-out;
+    -moz-transition:all .25s ease-in-out;
+    -webkit-transition:all .25s ease-in-out;
+  }
+
+.btnPlay:before {
+    content:"";
+    position:absolute;
+    background:rgba(200,200,200,.4);
+    height:50px;
+    width:50px;
+    -webkit-border-radius:10%;
+    border-radius:10%;
+    margin-left:-35px;
+    margin-top:-25px;
+    transition:all .25s ease-in-out;
+    -moz-transition:all .25s ease-in-out;
+    -webkit-transition:all .25s ease-in-out;
+  }
+
+ .btnPlay:hover {
+    opacity: 1; 
+    cursor:pointer;
+  }
+
+ .btnPlay:hover:before{
+    -webkit-box-shadow:0px 0px 10px 1px rgba(0, 0, 0, .6);
+    box-shadow:0px 0px 10px 1px rgba(0, 0, 0, .4);
+    
+  }
+
+  .sliderContainer:hover .btnPlay {
+    opacity: 1;
+  }
+
+
+.sliderCurrentForward,
+.sliderCurrentToOut,
+.sliderCurrentBackward,
+.sliderCurrentToOutBack
+{
+    position: absolute;
+}
+
+.sliderCurrentForward
+{
+    animation-name: slideinCurrentBackward;
+}
+
+.sliderCurrentToOut {
+    animation-name: slideinCurrentToOutBack;
+}
+
+.sliderCurrentBackward {
+    animation-name: slideinCurrentForward;
+}
+
+.sliderCurrentToOutBack {
+    animation-name: slideinCurrentToOut;
+}
+
+@keyframes slideinCurrentForward {
+        from {
+            margin-left: 0%;
+        }
+    
+        to {
+            margin-left: 100%;
+        }
+}
+
+@keyframes slideinCurrentToOut {
+    from {
+        margin-left: -100%;
+    }
+
+    to {
+        margin-left: 0%;
+    }
+}
+
+
+@keyframes slideinCurrentBackward {
+    from {
+        margin-left: 0%;
+    }
+
+    to {
+        margin-left: -100%;
+    }
+}
+
+@keyframes slideinCurrentToOutBack {
+    from {
+        margin-left: 100%;
+    }
+
+    to {
+        margin-left: 0%;
+    }
+}
+
+.sliderContainer {
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+}
